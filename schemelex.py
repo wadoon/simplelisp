@@ -12,7 +12,7 @@ tokens = (
     'NUM'
 )
 
-t_SEPERATOR     = r'[ \t]'
+t_SEPERATOR     = r'[ \t]+'
 t_VAR           = r'[a-zA-Z_.$+\-*/%!§=\']\w*'
 t_LITERAL       = r'"[a-zA-Z0-9_+\*\- :, ]*"'
 t_LPAREN        = r'\('

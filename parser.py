@@ -1,7 +1,5 @@
 import ply.yacc as yacc
-
 from pprint import pprint
-
 from schemelex import tokens
 
 
@@ -59,7 +57,6 @@ register(add,sub,mul,div,set,floordiv,car,delete)
 ################################################################# 
 
 
-
 precedence = (
     ('right' ,'RPAREN'),
     ('left' ,'LPAREN'),
@@ -90,19 +87,23 @@ class List(object):
     def __init__(self, name, exprlist):
         self.name = _var_names[name]
         self.exprlist = exprlist
+        
     def __call__(self):   
         param = [ x() for x in self.exprlist]
-        pprint(param)
+        #pprint(param)
         return self.name(*param)
         
 
 pl = lambda list:  ', '.join( (str(x) for x in  list ))
 
-start = 'list'
+start = 'inputstream'
 
 def p_error(t):
-    print "ERR:" , t
-    print t.skip(1)
+    print >> sys.stderr, "ERR:" , t,
+    print >> sys.stderr, "Line: %d, %d" %(  t.lineno, t.lexpos )
+    print >> sys.stderr, "type: %s, value: %s" %(  t.type , t.value )
+    
+    print t.lexer.skip(1)
 
 
 def p_var(t):
@@ -142,15 +143,29 @@ def p_list(t):
     t[0] = List(t[2],t[4])
     return t
 
+def p_inputstream(t):
+    '''inputstream : list SEPERATOR inputstream
+                   | list inputstream
+                   | list'''
+    t[0] = [t[1]]
+
+    try:
+        t[0]+=t[2]
+    except:
+        pass    
+    return t
+
 yacc.yacc()
 
 if __name__=='__main__':
-   
-    while 1:
-        try:
-            s = raw_input('calc > ')
-        except EOFError:
-            break
-        if not s: continue
-        result = yacc.parse(s)
-        result()
+    import sys
+
+    if sys.argv[1]:
+        s = sys.argv[1]
+    else:
+        s = raw_input('calc > ')
+    result = yacc.parse(s)
+#    print result
+    [x() for x in result]
+    
+    
