@@ -1,0 +1,4 @@
+parser.out
+parsetab.pyo schemelex.pyo
+*.pyc
+parsetab.py

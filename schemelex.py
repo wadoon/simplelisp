@@ -13,10 +13,10 @@ tokens = (
 )
 
 t_SEPERATOR     = r'[ \t]+'
-t_VAR           = r'[a-zA-Z_.$+\-*/%!§=\']\w*'
-t_LITERAL       = r'"[a-zA-Z0-9_+\*\- :, ]*"'
+t_VAR           = r'[a-zA-Z_.$+\-*/%!§=\']+'
+t_LITERAL       = r'("|\')[a-zA-Z0-9_+\*\- :, ]*("|\')'
 t_LPAREN        = r'\('
-t_RPAREN        = r'\)'
+t_RPAREN        = r'[ ]? \)'
 #t_NUM =
 
 def t_NUM(t):    
@@ -34,7 +34,7 @@ def t_newline(t):
 #t_ignore=' \t'
 
 def t_error(t):
-    print "Illegal character '%s'" % t.value[0]
+    print "Illegal character '%s'" % t  #(.value[0]
     t.lexer.skip(1)
 
 lex.lex()
